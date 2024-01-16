@@ -97,6 +97,20 @@ app.get("/api/classDetails", (req, res) => {
   res.send(classDetails.default);
 });
 
+app.get("/api/tabDetails", (req, res) => {
+  const tabDetails = require("./jsons/tabDetails");
+  res.send(tabDetails.default);
+});
+
+app.get("/api/gradebookAnalytics", (req, res) => {
+  const gradebookAnalytics = require("./jsons/gradebookAnalytics");
+  res.send(gradebookAnalytics.default);
+});
+app.get("/api/studentListWithAnalytics", (req, res) => {
+  const studentListWithAnalytics = require("./jsons/studentListWithAnalytics");
+  res.send(studentListWithAnalytics.default);
+});
+
 
 // This is fired every time the server-side receives a request.
 app.use(handleRender);
