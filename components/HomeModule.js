@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import IRTabsComponent from "./IRTabsComponent";
 import Icon from "./Icon";
 import * as intlModule from 'react-intl';
+import IRAutocompleteSearchBar from "./IRAutoCompleteSearchBar";
 
 const StyledToggleButtonTypography = styled(Typography)`
   color: #292524;
@@ -148,6 +149,30 @@ class HomeModule extends React.Component {
 
 
             return productArray;
+        };
+
+        function onEnterPress() {
+
+        }
+        function onItemClick() {
+
+        }
+
+        function getSearchResult() {
+
+        }
+
+        function closeClickSearchHandler() {
+
+        }
+
+        const searchBarProps = {
+            placeholder: "Search",
+            getSearchResult: getSearchResult,
+            onClose: closeClickSearchHandler,
+            onItemClick: onItemClick,
+            onEnterPress: onEnterPress,
+            id: 'main-focus-area',
         };
 
         function handleProductChange(selectedOption) {
@@ -301,6 +326,18 @@ class HomeModule extends React.Component {
                                     </>
                                 );
                             })}
+                        </Box>
+                        <Box display="flex" pb={2}>
+                            <StyledTypography variant="h4" color={theme.palette.surface.contrastText}>
+                                Students
+                            </StyledTypography>
+                        </Box>
+                        <Box display="flex" pb={3}>
+                            <Box flex={1}>
+                                <Box maxWidth={'400px'}>
+                                    <IRAutocompleteSearchBar {...searchBarProps} />
+                                </Box>
+                            </Box>
                         </Box>
                     </Box>
                 </Box>
