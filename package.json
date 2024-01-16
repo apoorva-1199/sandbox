@@ -18,6 +18,7 @@
     "@mui/material": "latest",
     "babel-loader": "latest",
     "cross-env": "latest",
+    "date-fns": "^3.2.0",
     "express": "latest",
     "nodemon": "latest",
     "npm-run-all": "latest",

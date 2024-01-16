@@ -2,7 +2,8 @@ import React from "react";
 import Box from '@mui/material/Box';
 import TitleSubtitleComponent from "./TitleSubtitleComponent";
 import { withRouter } from "react-router-dom";
-
+import enLocale from 'date-fns/locale/en-US';
+import format from 'date-fns/format';
 class HomeModule extends React.Component {
     constructor(props) {
         super(props);
@@ -58,8 +59,21 @@ class HomeModule extends React.Component {
             return <div>Loading...</div>;
         }
 
+        function timeStampToDateInLocale(timeStamp) {
+            let date = new Date(timeStamp);
+            let dateString = format(date, 'EEE MMM dd yyyy', {
+                locale: enLocale,
+            }).split(' ');
+
+            let dateInFormat = `${dateString[1]} ${dateString[2]}, ${dateString[3]}`;
+
+            return dateInFormat;
+        };
+
         function titleSubtitleComponentProps() {
             let classObj = classDetails && classDetails.class;
+            let startDate = timeStampToDateInLocale(classObj.startdate);
+            let endDate = timeStampToDateInLocale(classObj.enddate);
             if (classObj) {
                 return {
                     title: {
@@ -67,7 +81,7 @@ class HomeModule extends React.Component {
                     },
                     subTitle: {
                         variant: 'subtitle2',
-                        text: 'Class Dates: Apr 27, 2023 - Apr 25, 2024',
+                        text: `Class Dates: ${startDate} - ${endDate}`,
                     },
                 };
             } else return {};
