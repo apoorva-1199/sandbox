@@ -78,7 +78,7 @@ function handleRender(req, res) {
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
           <StaticRouter context={context} location={req.url}>
-            <AppRoutes theme={theme} />
+            <AppRoutes />
           </StaticRouter>
         </ThemeProvider>
       </CacheProvider>

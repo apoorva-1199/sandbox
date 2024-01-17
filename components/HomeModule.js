@@ -21,6 +21,7 @@ import IRStudentAnalyticsList from "./IRStudentAnalyticsList";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import NoListWithoutImage from "./NoListWithoutImage";
+import { withTheme } from '@mui/styles';
 
 const StyledToggleButtonTypography = styled(Typography)`
   color: #292524;
@@ -623,4 +624,4 @@ class HomeModule extends React.Component {
 
 
 
-export default withRouter(HomeModule);
+export default withTheme(withRouter(HomeModule));

@@ -4,10 +4,9 @@ import AppRoutes from "./AppRoutes";
 
 class App extends Component {
   render() {
-    const { theme } = this.props;
     return (
       <Router>
-        <AppRoutes theme={theme} />
+        <AppRoutes />
       </Router>
     );
   }
