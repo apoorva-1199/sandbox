@@ -6,20 +6,22 @@ import styled from "styled-components";
 import TabScrollButton from '@mui/material/TabScrollButton';
 import { createStyles, makeStyles } from '@mui/styles';
 import Skeleton from '@mui/material/Skeleton';
+import { useTheme } from '@mui/material/styles';
 
-const useStyles = makeStyles(() =>
+
+const useStyles = makeStyles((theme) =>
     createStyles({
         selected: {
-            color: '#292524',
-            backgroundColor: "#dedede"
+            color: theme.palette.background.contrastText,
+            backgroundColor: theme.palette.grey[400]
         },
         tabRoot: {
             margin: "0px 24px 0px 0px",
             minHeight: 36,
             minWidth: 0,
-            borderRadius: "4px",
+            borderRadius: theme.shape.borderRadius,
             opacity: 1,
-            color: "#292524",
+            color: theme.palette.background.contrastText,
             '&:last-child': {
                 marginRight: 0
             },
@@ -80,6 +82,7 @@ function TabSkeleton() {
 
 export default function IRTabsComponent(props) {
     const classes = useStyles();
+    const theme = useTheme();
 
     const a11yProps = (index, id) => {
         return {

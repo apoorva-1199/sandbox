@@ -128,7 +128,7 @@ function IRStudentAnalyticsList(props) {
                                             <StyledTypography
                                                 data-tid={'value-' + col.dataTid}
                                                 onClick={col.onLabelClick}
-                                                fontColor={col.isSelected ? "#aa543a" : "#292524"}
+                                                fontColor={col.isSelected ? theme.palette.background.contrastText3 : theme.palette.background.contrastText}
                                                 variant={col.typography || 'body1'}
                                                 component="span"
                                             >
@@ -143,7 +143,7 @@ function IRStudentAnalyticsList(props) {
                                                     fontSize={'18px'}
                                                     data-tid={`icon-header-${index}`}
                                                     item={InfoIcon}
-                                                    color={col.isSelected ? "#aa543a" : "#292524"}
+                                                    color={col.isSelected ? theme.palette.background.contrastText3 : theme.palette.background.contrastText}
                                                 />
                                             </Box>
                                         )}
@@ -223,7 +223,7 @@ function IRStudentAnalyticsList(props) {
                                                                             <Box display="inline-grid" overflow="hidden">
                                                                                 <StyledBody3Typo
                                                                                     data-tid={`text-subtitle-${item.id}-${listindex}-${index}`}
-                                                                                    fontColor={item.color || "#6d6d6d"}
+                                                                                    fontColor={item.color || theme.palette.surface.contrastText2}
                                                                                     variant={item.typography ? item.typography : 'body2'}
                                                                                 >
                                                                                     {item.subtitle}
@@ -241,7 +241,7 @@ function IRStudentAnalyticsList(props) {
                                                                             fontSize={'18px'}
                                                                             data-tid={`icon-${item.itemRightIcon.type}-${index}`}
                                                                             item={item.itemRightIcon.icon}
-                                                                            color={item.itemRightIcon.color || "#292524"}
+                                                                            color={item.itemRightIcon.color || theme.palette.surface.contrastText}
                                                                         />
                                                                     </Box>
                                                                 </IRTooltip>

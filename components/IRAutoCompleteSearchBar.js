@@ -91,7 +91,7 @@ const HiddenLabel = styled.label`
   border: 0;
 `;
 
-const autocompleteSearchStyles = makeStyles(() => ({
+const autocompleteSearchStyles = makeStyles((theme) => ({
     root: {
         '& fieldset': {
             display: 'none',
@@ -107,11 +107,11 @@ const autocompleteSearchStyles = makeStyles(() => ({
         height: 'inherit',
         '& input': {
             padding: '0 40px 0 48px !important',
-            border: `1px solid #dedede`,
+            border: `1px solid ${theme.palette.grey["400"]}`,
             height: 'inherit',
             borderRadius: '8px',
             boxSizing: 'border-box',
-            backgroundColor: '#ffffff',
+            backgroundColor: `${theme.palette.secondary.contrastText2}`,
         },
     },
     paper: {
@@ -120,11 +120,11 @@ const autocompleteSearchStyles = makeStyles(() => ({
         borderRadius: 0,
         boxShadow: 'none',
         '& ul': {
-            border: `1px solid #dedede`,
+            border: `1px solid ${theme.palette.grey[400]}`,
             borderBottomLeftRadius: '12px',
             borderBottomRightRadius: '12px',
             borderTop: 0,
-            backgroundColor: '#ffffff',
+            backgroundColor: theme.palette.surface.main,
             boxShadow: '-5px 2px 9px -3px rgb(0 0 0 / 20%), 5px 2px 9px -3px rgb(0 0 0 / 20%)',
         },
         '& li': {
@@ -153,7 +153,7 @@ const autocompleteSearchStyles = makeStyles(() => ({
     },
 }));
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     search: {
         borderRadius: '4px',
         width: '100%',
@@ -171,29 +171,29 @@ const useStyles = makeStyles(() => ({
     },
     closeIcon: {
         padding: '0px',
-        color: "#6b6665",
+        color: theme.palette.grey[700],
     },
 }));
 const SearchItemTypography = styled(Typography)`
   color: #292524;
-  flex: 1;
+            flex: 1;
 `;
 const SearchItemFamilyTypography = styled(Typography)`
-  color: #6b6665;
-  margin-left: 16px;
+color: #6b6665;
+        margin - left: 16px;
 `;
 const StyledTagBox = styled(Box)`
-  height: 24px;
-  min-width: 40px;
-  border-radius: 12px;
-  margin-right: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #dedede;
+height: 24px;
+min - width: 40px;
+border - radius: 12px;
+margin - right: 12px;
+display: flex;
+align - items: center;
+justify - content: center;
+background - color: #dedede;
 `;
 const StyledTypography = styled(Typography)`
-  color: #292524;
+color: #292524;
 `;
 
 function IRAutocompleteSearchBar(props) {
@@ -329,7 +329,7 @@ function IRAutocompleteSearchBar(props) {
             case SearchResultType.FAMILY:
             case SearchResultType.STUDENT:
                 OptionComponent = (
-                    <Box display="flex" data-tid={`list-item-${option.id}`} alignItems="left" width="100%" px={1} py={2} tabIndex={0}>
+                    <Box display="flex" data-tid={`list - item - ${option.id} `} alignItems="left" width="100%" px={1} py={2} tabIndex={0}>
                         {option.icon && <StyledIcon item={option.icon} size={'24px'} />}
                         <SearchItemTypography component="span" isAFamily={option.type === SearchResultType.FAMILY} variant={'body1'}>
                             {option.value}
@@ -342,7 +342,7 @@ function IRAutocompleteSearchBar(props) {
                             <Box display={'flex'}>
                                 {option.tags.map(tag => (
                                     <StyledTagBox>
-                                        <StyledTypography data-tid={`text-tag-${tag}`}>{tag}</StyledTypography>
+                                        <StyledTypography data-tid={`text - tag - ${tag} `}>{tag}</StyledTypography>
                                     </StyledTagBox>
                                 ))}
                             </Box>
@@ -431,7 +431,7 @@ function IRAutocompleteSearchBar(props) {
                 }}
                 classes={{
                     ...autocompleteSearchboxClasses,
-                    listbox: `${autocompleteSearchboxClasses.listbox}`,
+                    listbox: `${autocompleteSearchboxClasses.listbox} `,
                 }}
                 getOptionDisabled={option => disableNoSearchOption(option)}
                 value={searchString && searchString.length > 0 ? searchString : null}

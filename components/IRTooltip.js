@@ -6,11 +6,11 @@ import { createStyles, makeStyles } from '@mui/styles';;
 import { useTheme } from '@mui/material/styles';
 
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme) =>
     createStyles({
         tooltip: {
-            backgroundColor: "#292524",
-            color: "#ffffff",
+            backgroundColor: theme.palette.background.contrastText,
+            color: theme.palette.secondary.contrastText,
         },
     })
 );
