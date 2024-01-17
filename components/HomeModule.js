@@ -10,6 +10,16 @@ import IRTabsComponent from "./IRTabsComponent";
 import Icon from "./Icon";
 import * as intlModule from 'react-intl';
 import IRAutocompleteSearchBar from "./IRAutoCompleteSearchBar";
+import TableSortLabel from '@mui/material/TableSortLabel';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import InfoIcon from '@mui/icons-material/Info';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import GetTimeComponent from "./GetTimeComponent";
+import GetTimeSpent from "./GetTimeSpent";
+import IRStudentAnalyticsList from "./IRStudentAnalyticsList";
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 const StyledToggleButtonTypography = styled(Typography)`
   color: #292524;
@@ -23,9 +33,30 @@ const StyledTypography = styled(Typography)`
 `;
 
 const StyledIcon = styled(Icon)`
-  fill: ${props => props.color && props.color};
   margin-right: 4px;
 `;
+
+const StyledTableSortLabel = styled(TableSortLabel)`
+   {
+    &.MuiTableSortLabel-icon {
+      fill: #b45c3d;
+    }
+  }
+`;
+
+const ORDER = {
+    ASC: 'asc',
+    DESC: 'desc',
+}
+
+
+const ORDERBY = {
+    NAME: 'name',
+    LASTACTIVE: 'lastActive',
+    TIME: 'time',
+    SCORE: 'score',
+    COMPLETION: 'completion',
+}
 
 class HomeModule extends React.Component {
     constructor(props) {
@@ -34,6 +65,8 @@ class HomeModule extends React.Component {
             classDetails: null,
             loading: true,
             selectedTabProductCode: "component11633525148090",
+            orderBy: ORDERBY.NAME,
+            order: ORDER.DESC
         };
         if (this.props.staticContext && this.props.staticContext.initialState) {
             this.state = Object.assign(
@@ -97,7 +130,7 @@ class HomeModule extends React.Component {
     }
 
     render() {
-        const { classDetails, loading, selectedTabProductCode, tabDetails, gradebookAnalytics, studentListWithAnalytics } = this.state;
+        const { classDetails, loading, selectedTabProductCode, tabDetails, gradebookAnalytics, studentListWithAnalytics, orderBy, order } = this.state;
         const { theme } = this.props;
         const intl = intlModule;
 
@@ -166,6 +199,22 @@ class HomeModule extends React.Component {
 
         }
 
+        const getSortIcon = (orderById) => {
+            return (
+                <StyledTableSortLabel
+                    aria-label={"Sort"}
+                    active={true}
+                    tabIndex={-1}
+                    direction={orderBy === orderById ? order : ORDER.ASC}
+                    onClick={() => {
+                        handleRequestSort(orderById);
+                    }}
+                    IconComponent={ArrowDropDownIcon}
+                    role="img"
+                />
+            );
+        };
+
         const searchBarProps = {
             placeholder: "Search",
             getSearchResult: getSearchResult,
@@ -196,6 +245,10 @@ class HomeModule extends React.Component {
         const getEmDash = () => {
             return '—';
         };
+
+        const getEnDash = () => {
+            return '–';
+        }
 
         function productAnalyticsSummaryConfig() {
             let passingScore = 70;
@@ -228,7 +281,7 @@ class HomeModule extends React.Component {
                             getEmDash()
                         ),
                         subtitle: `Above ${passingScore}%`,
-                        icon: null,
+                        icon: ArrowUpwardIcon,
                         iconColor: "#28691b",
                         iconText: `${Math.round((abovePassingScoreCount / totalStudentCount) * 100)}%`,
                         width: '30%',
@@ -245,7 +298,7 @@ class HomeModule extends React.Component {
                             getEmDash()
                         ),
                         subtitle: `Below ${passingScore}%`,
-                        icon: null,
+                        icon: ArrowDownwardIcon,
                         iconColor: "#df2020",
                         iconText: `${Math.round((belowPassingScoreCount / totalStudentCount) * 100)}%`,
                         width: '30%',
@@ -267,6 +320,201 @@ class HomeModule extends React.Component {
             }
             return analytics;
         }
+
+        const studentListItemClickHandler = () => {
+
+        }
+
+        const renderDetails = () => {
+            let studentAnalyticsList = [];
+            if (gradebookAnalytics) {
+                let selectedTabProduct = gradebookAnalytics.data.products.find(product => product.meta.productcode == selectedTabProductCode);
+                gradebookAnalytics.data.students.forEach((student, index) => {
+                    let studentAnalytics = student.products[selectedTabProductCode] && student.products[selectedTabProductCode].__analytics;
+                    if (studentAnalytics) {
+                        let isBelowPassingScore = Math.round(studentAnalytics.grade) < parseFloat(70);
+                        let completionPercentage = Math.round(studentAnalytics.percentageCompletion);
+                        let studentData = {
+                            uuid: `${student.meta.uuid}`,
+                            meta: {
+                                name: `${student.meta.fn} ${student.meta.ln ? student.meta.ln : ''}`,
+                            },
+                            items: [
+                                {
+                                    id: 'name',
+                                    value: `${student.meta.fn} ${student.meta.ln ? student.meta.ln : ''}`,
+                                    itemIcon: selectedTabProduct['__analytics'].scorableItems
+                                        ? {
+                                            icon: isBelowPassingScore ? TrendingDownIcon : TrendingUpIcon,
+                                            color: isBelowPassingScore ? "#df2020" : "#28691b",
+                                            type: isBelowPassingScore ? 'below' : 'above',
+                                        }
+                                        : null,
+                                    width: '40%',
+                                    flex: 1,
+                                },
+                                {
+                                    id: 'lastActive',
+                                    value: <GetTimeComponent lastAccessed={student.meta.lastActive} />,
+                                    width: '17%',
+                                    color: theme.palette.surface.contrastText2,
+                                    typography: 'body1',
+                                    originalValue: student.meta.lastActive,
+                                    maxWidth: '180px',
+                                },
+                                {
+                                    id: 'time',
+                                    value: completionPercentage == 0 ? getEnDash() : <GetTimeSpent timestamp={studentAnalytics.ts} />,
+                                    width: '13%',
+                                    color: theme.palette.surface.contrastText2,
+                                    typography: 'body1',
+                                    originalValue: completionPercentage == 0 ? 0 : studentAnalytics.ts,
+                                    marginLeft: completionPercentage == 0 && '16px',
+                                    maxWidth: '180px',
+                                },
+                            ],
+                        };
+
+                        if (selectedTabProduct['__analytics'].scorableItems) {
+                            studentData.items.push({
+                                id: 'score',
+                                value: completionPercentage == 0 ? getEnDash() : `${Math.round(studentAnalytics.grade)}%`,
+                                width: '15%',
+                                color: theme.palette.surface.contrastText2,
+                                typography: 'body1',
+                                originalValue: completionPercentage == 0 ? -1 : Math.round(studentAnalytics.grade),
+                                marginLeft: completionPercentage == 0 && '16px',
+                                maxWidth: '180px',
+                            });
+                        }
+                        studentData.items.push({
+                            id: 'completion',
+                            value: `${completionPercentage}%`,
+                            width: '15%',
+                            color: theme.palette.surface.contrastText2,
+                            typography: 'body1',
+                            originalValue: completionPercentage,
+                            maxWidth: '180px',
+                        });
+                        studentAnalyticsList.push(studentData);
+                    }
+                });
+            }
+            return studentAnalyticsList;
+        }
+
+        const handleRequestSort = (property) => {
+
+        };
+
+        const colLabels = () => {
+            let selectedTabProduct = gradebookAnalytics.data.products.find(product => product.meta.productcode == selectedTabProductCode);
+            const tabName = tabDetails.tabs.find(item => {
+                return item.code === selectedTabProductCode;
+            });
+
+            let columns = [
+                {
+                    title: "Name",
+                    dataTid: 'name',
+                    width: '40%',
+                    rightIcon: getSortIcon(ORDERBY.NAME),
+                    isSelected: true,
+                    onLabelClick: () => {
+                        handleRequestSort(ORDERBY.NAME);
+                    },
+                    flex: 1,
+                    ariaLabel:
+                        orderBy === ORDERBY.NAME
+                            ? order === ORDER.ASC
+                                ? "Sort by Ascending"
+                                : "Sort by Descending"
+                            : '',
+                },
+                {
+                    title: "Last Active",
+                    icon: InfoIcon,
+                    tooltip: "Last Active",
+                    dataTid: 'last-active',
+                    width: '17%',
+                    rightIcon: getSortIcon(ORDERBY.LASTACTIVE),
+                    isSelected: ORDERBY.LASTACTIVE == orderBy,
+                    onLabelClick: () => {
+                        handleRequestSort(ORDERBY.LASTACTIVE);
+                    },
+                    maxWidth: '180px',
+                    ariaLabel:
+                        orderBy === ORDERBY.LASTACTIVE
+                            ? order === ORDER.ASC
+                                ? "Sort by Ascending"
+                                : "Sort by Descending"
+                            : '',
+                },
+                {
+                    title: "Time Spent",
+                    icon: InfoIcon,
+                    tooltip: "Time spent",
+                    dataTid: 'time',
+                    width: '13%',
+                    rightIcon: getSortIcon(ORDERBY.TIME),
+                    isSelected: ORDERBY.TIME == orderBy,
+                    onLabelClick: () => {
+                        handleRequestSort(ORDERBY.TIME);
+                    },
+                    maxWidth: '180px',
+                    ariaLabel:
+                        orderBy === ORDERBY.TIME
+                            ? order === ORDER.ASC
+                                ? "Sort by Ascending"
+                                : "Sort by Descending"
+                            : '',
+                },
+            ];
+
+            if (selectedTabProduct && selectedTabProduct['__analytics'] && selectedTabProduct['__analytics'].scorableItems) {
+                columns.push({
+                    title: "Score",
+                    icon: InfoIcon,
+                    tooltip: "Score",
+                    dataTid: 'score',
+                    width: '15%',
+                    rightIcon: getSortIcon(ORDERBY.SCORE),
+                    isSelected: ORDERBY.SCORE == orderBy,
+                    onLabelClick: () => {
+                        handleRequestSort(ORDERBY.SCORE);
+                    },
+                    maxWidth: '180px',
+                    ariaLabel:
+                        orderBy === ORDERBY.SCORE
+                            ? order === ORDER.ASC
+                                ? "Sort by Ascending"
+                                : "Sort by Descending"
+                            : '',
+                });
+            }
+
+            columns.push({
+                title: "Completion",
+                icon: InfoIcon,
+                tooltip: "Completion",
+                dataTid: 'completion',
+                width: '15%',
+                rightIcon: getSortIcon(ORDERBY.COMPLETION),
+                isSelected: ORDERBY.COMPLETION == orderBy,
+                onLabelClick: () => {
+                    handleRequestSort(ORDERBY.COMPLETION);
+                },
+                maxWidth: '180px',
+                ariaLabel:
+                    orderBy === ORDERBY.COMPLETION
+                        ? order === ORDER.ASC
+                            ? "Sort by Ascending"
+                            : "Sort by Descending"
+                        : '',
+            });
+
+            return columns;
+        };
 
         return (
             <Box sx={{ backgroundColor: theme.palette.primary.main }}>
@@ -315,7 +563,7 @@ class HomeModule extends React.Component {
                                                 </Box>
                                                 {analytics.icon && (
                                                     <Box display="flex" pl={1}>
-                                                        <StyledIcon data-tid={'icon-' + analytics.dataTid} item={analytics.icon} color={analytics.iconColor} />
+                                                        <StyledIcon sx={{ fill: analytics.iconColor }} data-tid={'icon-' + analytics.dataTid} item={analytics.icon} color={analytics.iconColor} />
                                                         <StyledTypography data-tid={'value-' + analytics.dataTid} color={analytics.iconColor}>
                                                             {analytics.iconText}
                                                         </StyledTypography>
@@ -336,6 +584,13 @@ class HomeModule extends React.Component {
                             <Box flex={1}>
                                 <Box maxWidth={'400px'}>
                                     <IRAutocompleteSearchBar {...searchBarProps} />
+                                </Box>
+                                <Box maxWidth={'1500px'}>
+                                    <IRStudentAnalyticsList
+                                        colLabels={colLabels()}
+                                        listData={renderDetails()}
+                                        itemClickHandler={studentListItemClickHandler}
+                                    ></IRStudentAnalyticsList>
                                 </Box>
                             </Box>
                         </Box>

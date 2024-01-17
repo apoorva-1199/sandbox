@@ -176,11 +176,6 @@ const useStyles = makeStyles(() => ({
 }));
 const SearchItemTypography = styled(Typography)`
   color: #292524;
-//   white-space: ${props => props.isAFamily && 'nowrap'};
-//   overflow: ${props => props.isAFamily && 'hidden'};
-//   text-overflow: ${props => props.isAFamily && 'ellipsis'};
-//   max-width: ${props => props.isAFamily && 'fit-content'};
-//   font-weight: ${props => props.isAFamily && '700'};
   flex: 1;
 `;
 const SearchItemFamilyTypography = styled(Typography)`
@@ -436,7 +431,7 @@ function IRAutocompleteSearchBar(props) {
                 }}
                 classes={{
                     ...autocompleteSearchboxClasses,
-                    listbox: `${autocompleteSearchboxClasses.listbox} ${scrollCss}`,
+                    listbox: `${autocompleteSearchboxClasses.listbox}`,
                 }}
                 getOptionDisabled={option => disableNoSearchOption(option)}
                 value={searchString && searchString.length > 0 ? searchString : null}

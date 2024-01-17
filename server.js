@@ -27,6 +27,12 @@ function renderFullPage(html, css, context) {
           href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
         />
         <meta name="emotion-insertion-point" content="" />
+        <style>
+        body{
+          height: 100%;
+          background: #faf8f7;
+        }
+        </style>
         ${css}
       </head>
       <script type="text/javascript">
