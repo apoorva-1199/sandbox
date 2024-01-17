@@ -20,6 +20,7 @@ import GetTimeSpent from "./GetTimeSpent";
 import IRStudentAnalyticsList from "./IRStudentAnalyticsList";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import NoListWithoutImage from "./NoListWithoutImage";
 
 const StyledToggleButtonTypography = styled(Typography)`
   color: #292524;
@@ -66,7 +67,8 @@ class HomeModule extends React.Component {
             loading: true,
             selectedTabProductCode: "component11633525148090",
             orderBy: ORDERBY.NAME,
-            order: ORDER.DESC
+            order: ORDER.DESC,
+            percentageCompletion: null
         };
         if (this.props.staticContext && this.props.staticContext.initialState) {
             this.state = Object.assign(
@@ -93,12 +95,15 @@ class HomeModule extends React.Component {
         const tabDetails = await this.getTabDetails();
         const gradebookAnalytics = await this.getGradebookAnalytics();
         const studentListWithAnalytics = await this.getStudentAnalyticsList();
+        let completionArray = gradebookAnalytics.data.products.map(el => el.__analytics.percentageCompletion);
+        let percentageCompletion = completionArray.reduce((a, b) => a + b, 0);
         return {
             classDetails,
             loading: false,
             tabDetails,
             gradebookAnalytics,
-            studentListWithAnalytics
+            studentListWithAnalytics,
+            percentageCompletion
         };
     }
 
@@ -128,9 +133,12 @@ class HomeModule extends React.Component {
         const initialState = await HomeModule.getInitialState(match.params);
         this.setState(initialState);
     }
+    handleSelectedProductChange = (product) => {
+        this.setState({ selectedTabProductCode: product });
+    }
 
     render() {
-        const { classDetails, loading, selectedTabProductCode, tabDetails, gradebookAnalytics, studentListWithAnalytics, orderBy, order } = this.state;
+        const { classDetails, loading, selectedTabProductCode, tabDetails, gradebookAnalytics, studentListWithAnalytics, percentageCompletion, orderBy, order } = this.state;
         const { theme } = this.props;
         const intl = intlModule;
 
@@ -224,14 +232,12 @@ class HomeModule extends React.Component {
             id: 'main-focus-area',
         };
 
-        function handleProductChange(selectedOption) {
-            if (selectedTabProductCode != selectedOption) {
-                this.setState({ selectedTabProductCode: selectedOption });
-            }
-        };
 
-        function handleTabChange(event, selectedOption) {
-            handleProductChange(selectedOption);
+
+        const handleTabChange = (event, selectedOption) => {
+            if (selectedTabProductCode != selectedOption) {
+                this.handleSelectedProductChange(selectedOption);
+            }
         };
 
         function tabsProps() {
@@ -526,54 +532,68 @@ class HomeModule extends React.Component {
                         <Box>
                             <IRTabsComponent isMobile={false} {...tabsProps()}></IRTabsComponent>
                         </Box>
-                        <Box pt={4} pb={4} display="flex" maxWidth="1280px" flexWrap="wrap">
-                            {productAnalyticsSummaryConfig().map((analytics, index, arr) => {
-                                return (
+                        <Box pt={productAnalyticsSummaryConfig().length <= 0 ? 2 : 4} pb={productAnalyticsSummaryConfig().length <= 0 ? 2 : 4} display="flex" maxWidth="1280px" flexWrap="wrap" justifyContent={productAnalyticsSummaryConfig().length <= 0 && "center"}>
+                            {
+                                productAnalyticsSummaryConfig().length <= 0 ?
+                                    <Box my={2} maxWidth={'1200px'}>
+                                        <NoListWithoutImage
+                                            dataTid="noAnalytics"
+                                            title={'No progress to show yet'}
+                                            subtitle={'Once students submit actvities, you can view their progress here.'}
+                                            textAlign={'left'}
+                                            titleAlign={'left'}
+                                            marginNeeded={true}
+                                        />
+                                    </Box> :
                                     <>
-                                        <Box
-                                            display={'flex'}
-                                            alignItems={'center'}
-                                            justifyContent={'center'}
-                                            mt={index > 1 && 1.5}
-                                            py={3}
-                                            px={3}
-                                            paddingRight={index > 3 && 0}
-                                            borderLeft={index > 0 && `1px solid ${theme.palette.grey['400']}`}
-                                            width={analytics.width}
-                                            flex={'1'}
-                                        >
-                                            <>
-                                                <Box>
-                                                    <StyledTypography
-                                                        data-tid={'title-' + analytics.dataTid}
-                                                        color={theme.palette.surface.contrastText}
-                                                        style={{ paddingBottom: '8px' }}
-                                                        variant={'h6'}
-                                                        component={'p'}
+                                        {productAnalyticsSummaryConfig().map((analytics, index, arr) => {
+                                            return (
+                                                <>
+                                                    <Box
+                                                        display={'flex'}
+                                                        alignItems={'center'}
+                                                        justifyContent={'center'}
+                                                        mt={index > 1 && 1.5}
+                                                        py={3}
+                                                        px={3}
+                                                        paddingRight={index > 3 && 0}
+                                                        borderLeft={index > 0 && `1px solid ${theme.palette.grey['400']}`}
+                                                        width={analytics.width}
+                                                        flex={'1'}
                                                     >
-                                                        {analytics.title}
-                                                    </StyledTypography>
-                                                    <StyledTypography
-                                                        data-tid={'value-' + analytics.dataTid}
-                                                        color={theme.palette.surface.contrastText2}
-                                                        variant={'body1'}
-                                                    >
-                                                        {analytics.subtitle}
-                                                    </StyledTypography>
-                                                </Box>
-                                                {analytics.icon && (
-                                                    <Box display="flex" pl={1}>
-                                                        <StyledIcon sx={{ fill: analytics.iconColor }} data-tid={'icon-' + analytics.dataTid} item={analytics.icon} color={analytics.iconColor} />
-                                                        <StyledTypography data-tid={'value-' + analytics.dataTid} color={analytics.iconColor}>
-                                                            {analytics.iconText}
-                                                        </StyledTypography>
+                                                        <>
+                                                            <Box>
+                                                                <StyledTypography
+                                                                    data-tid={'title-' + analytics.dataTid}
+                                                                    color={theme.palette.surface.contrastText}
+                                                                    style={{ paddingBottom: '8px' }}
+                                                                    variant={'h6'}
+                                                                    component={'p'}
+                                                                >
+                                                                    {analytics.title}
+                                                                </StyledTypography>
+                                                                <StyledTypography
+                                                                    data-tid={'value-' + analytics.dataTid}
+                                                                    color={theme.palette.surface.contrastText2}
+                                                                    variant={'body1'}
+                                                                >
+                                                                    {analytics.subtitle}
+                                                                </StyledTypography>
+                                                            </Box>
+                                                            {analytics.icon && (
+                                                                <Box display="flex" pl={1}>
+                                                                    <StyledIcon sx={{ fill: analytics.iconColor }} data-tid={'icon-' + analytics.dataTid} item={analytics.icon} color={analytics.iconColor} />
+                                                                    <StyledTypography data-tid={'value-' + analytics.dataTid} color={analytics.iconColor}>
+                                                                        {analytics.iconText}
+                                                                    </StyledTypography>
+                                                                </Box>
+                                                            )}
+                                                        </>
                                                     </Box>
-                                                )}
-                                            </>
-                                        </Box>
-                                    </>
-                                );
-                            })}
+                                                </>
+                                            );
+                                        })}
+                                    </>}
                         </Box>
                         <Box display="flex" pb={2}>
                             <StyledTypography variant="h4" color={theme.palette.surface.contrastText}>
