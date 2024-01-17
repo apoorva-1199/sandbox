@@ -134,7 +134,7 @@ class HomeModule extends React.Component {
         const { theme } = this.props;
         const intl = intlModule;
 
-        if (loading || !classDetails || !tabDetails) {
+        if (loading || !classDetails || !tabDetails || !gradebookAnalytics) {
             return <div>Loading...</div>;
         }
 
