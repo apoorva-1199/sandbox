@@ -175,6 +175,7 @@ class HomeModule extends React.Component {
                     subTitle: {
                         variant: 'subtitle2',
                         text: `Class Dates: ${startDate} - ${endDate}`,
+                        fontColor: theme.palette.background.contrastText2
                     },
                 };
             } else return {};
@@ -602,7 +603,7 @@ class HomeModule extends React.Component {
                                     </>}
                         </Box>
                         <Box display="flex" pb={2}>
-                            <StyledTypography variant="h4" color={theme.palette.surface.contrastText}>
+                            <StyledTypography variant={'h2'} component={'h2'} color={theme.palette.surface.contrastText}>
                                 Students
                             </StyledTypography>
                         </Box>
