@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
-import styled from 'styled-components';
+import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography';
 import Autocomplete from '@mui/material/Autocomplete';
 import Icon from './Icon';
@@ -13,6 +13,11 @@ import { useTheme } from '@mui/material/styles';
 import IconButtonComponent from './IconButtonComponent';
 import TextField from '@mui/material/TextField';
 import { debounce } from 'lodash';
+
+
+
+
+
 
 const SearchResultType = {
     ITEM: 'item',
@@ -28,38 +33,41 @@ const CUSTOM_TYPE = {
 }
 
 
+const StyledAutocompleteSearchContainer = styled(Box, {
+    shouldForwardProp: prop => prop !== 'isOptionsPresent' && prop !== 'active'
+})((props) => ({
+    borderRadius: '8px',
+    height: '40px',
+    width: '100%',
+    display: 'flex',
+    position: 'relative',
+    alignItems: 'center',
+    borderBottomLeftRadius: props.isOptionsPresent ? 0 : '',
+    borderBottomRightRadius: props.isOptionsPresent ? 0 : '',
+    border: `1px solid ${props.theme.palette.grey[400]}`,
+    boxShadow: props.isOptionsPresent ? '0 0px 8px rgb(0 0 0 / 30%)' : '',
+    backgroundColor: props.active ? props.theme.palette.surface.main : props.theme.palette.primary.main,
+    borderBottomColor: props.active && props.isOptionsPresent ? props.theme.palette.surface.main : '',
+}));
 
-const StyledAutocompleteSearchContainer = styled(Box)`
-  border-radius: 8px;
-  height: 40px;
-  width: 100%;
-  display: flex;
-  position: relative;
-  align-items: center;
-  border-bottom-left-radius:  0;
-  border-bottom-right-radius:0;
-  border: 1px solid #dedede;
-  box-shadow: '0 0px 8px rgb(0 0 0 / 30%)';
-  background-color: #faf8f7
-  border-bottom-color: #ffffff;
-`;
-
-const StyledActiveAutocompleteSearchContainer = styled(Box)`
-  height: 40px;
-  width: 100%;
-  position: relative;
-  input {
-    border-bottom-left-radius:'0';
-    border-bottom-right-radius: '0';
-    box-shadow:'0px 2px 8px 3px rgb(0 0 0 / 20%)';
-  }
-`;
+const StyledActiveAutocompleteSearchContainer = styled(Box, {
+    shouldForwardProp: prop => prop !== 'isOptionsPresent'
+})((props) => ({
+    height: '40px',
+    width: '100%',
+    position: 'relative',
+    input: {
+        borderBottomLeftRadius: props.isOptionsPresent && '0',
+        borderBottomRightRadius: props.isOptionsPresent && '0',
+        boxShadow: props.isOptionsPresent && '0px 2px 8px 3px rgb(0 0 0 / 20%)'
+    }
+}));
 
 const StyledIcon = styled(Icon)`
   margin-right: 8px;
   margin-left: 8px;
   z-index: 1;
-  fill: #6b6665;
+  fill: ${props => props.theme.palette.grey[700]};
 `;
 
 const StyledNoSearchbox = styled(Box)`

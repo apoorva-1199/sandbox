@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import React from "react";
-import styled from "styled-components";
+import styled from '@emotion/styled';
 import TabScrollButton from '@mui/material/TabScrollButton';
 import { createStyles, makeStyles } from '@mui/styles';
 import Skeleton from '@mui/material/Skeleton';
@@ -47,18 +47,20 @@ const TabsBox = styled(Box)`
 width: 100%;
 `;
 
-const StyledTab = styled(Tab)`
-text-transform: none;
-
-&:hover {
-    background-color: #dedede;
-	color: #292524;
-  }
-
-div{
-    align-items: center;
-}
-`;
+const StyledTab = styled(Tab, {
+    shouldForwardProp: prop => prop !== 'padding' && prop !== 'marginRight'
+})((props) => ({
+    padding: props.padding || '',
+    marginRight: props.marginRight || '',
+    textTransform: 'none',
+    '&:hover': {
+        backgroundColor: props.theme.palette.grey[400],
+        color: props.theme.palette.background.contrastText,
+    },
+    'div': {
+        alignItems: 'center',
+    },
+}));
 
 const StyledTabs = styled(Tabs)`
   align-items: center;

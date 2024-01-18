@@ -2,31 +2,34 @@ import React from 'react';
 import Icon from './Icon';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import styled from 'styled-components';
 import { useTheme } from '@mui/material/styles';
 import IRTooltip from './IRTooltip';
 import Body3Typography from './Body3Typography';
 import ListItem from '@mui/material/ListItem';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import InfoIcon from '@mui/icons-material/Info';
+import styled from '@emotion/styled';
+import isPropValid from '@emotion/is-prop-valid';
 
+const StyledTypography = styled(Typography, {
+    shouldForwardProp: prop => isPropValid(prop) && prop !== 'fontColor'
+})(props => ({
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    textAlign: 'left',
+    color: props.fontColor || props.theme.palette.surface.contrastText
+}))
 
-const StyledTypography = styled(Typography)`
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  text-align: left;
-//   margin-left: 16px;
-  color: #292524;
-`;
-
-const StyledBody3Typo = styled(Body3Typography)`
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  text-align: left;
-  color: #292524;
-`;
+const StyledBody3Typo = styled(Body3Typography, {
+    shouldForwardProp: prop => isPropValid(prop) && prop !== 'fontColor'
+})(props => ({
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    textAlign: 'left',
+    color: props.fontColor || props.theme.palette.surface.contrastText
+}))
 
 const StyledIcon2 = styled(Icon)`
 
@@ -35,14 +38,14 @@ const StyledIcon2 = styled(Icon)`
 const StyledListBox = styled(ListItem)`
   width: 100%;
   outline-offset: -2px;
-  border-bottom: 1px solid #dedede;
+  border-bottom: 1px solid ${props => props.theme.palette.grey[400]};
   padding: 16px 0;
   display: flex;
   align-items: center;
   cursor: pointer;
   position: relative;
   &:hover {
-    background: #f0f0f0;
+    background: ${props => props.theme.palette.grey[300]};
   }
 `;
 
@@ -53,8 +56,8 @@ const StyledIcon = styled(Box)`
 `;
 
 const StyledBox = styled(Box)`
-  svg {
-    fill: #aa543a;
+svg {
+    fill: ${props => props.theme.palette.background.contrastText3};
   }
 `;
 

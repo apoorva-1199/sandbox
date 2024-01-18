@@ -4,7 +4,7 @@ import TitleSubtitleComponent from "./TitleSubtitleComponent";
 import { withRouter } from "react-router-dom";
 import enLocale from 'date-fns/locale/en-US';
 import format from 'date-fns/format';
-import styled from 'styled-components';
+//import styled from 'styled-components';
 import Typography from '@mui/material/Typography';
 import IRTabsComponent from "./IRTabsComponent";
 import Icon from "./Icon";
@@ -22,17 +22,22 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import NoListWithoutImage from "./NoListWithoutImage";
 import { withTheme } from '@mui/styles';
+import styled from '@emotion/styled'
+import isPropValid from '@emotion/is-prop-valid'
+
 
 const StyledToggleButtonTypography = styled(Typography)`
-  color: #292524;
+  color: ${props => props.theme.palette.grey[900]};
   text-transform: none;
   display: flex;
   align-items: center;
 `;
 
-const StyledTypography = styled(Typography)`
-  color: #292524
-`;
+const StyledTypography = styled(Typography, {
+    shouldForwardProp: prop => isPropValid(prop) && prop !== 'color'
+})(props => ({
+    color: props.color
+}))
 
 const StyledIcon = styled(Icon)`
   margin-right: 4px;
@@ -41,7 +46,7 @@ const StyledIcon = styled(Icon)`
 const StyledTableSortLabel = styled(TableSortLabel)`
    {
     &.MuiTableSortLabel-icon {
-      fill: #b45c3d;
+      fill: props.theme.palette.secondary.main;
     }
   }
 `;
